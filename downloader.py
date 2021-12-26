@@ -3,7 +3,8 @@ import requests
 import urllib.request
 import argparse
 import string
-
+import urllib.parse
+from requests.utils import requote_uri
 
 def download_met(artist):
     try:
@@ -43,7 +44,9 @@ def download_met(artist):
 
             id_data = r.json()
             filename = sanitize(f"{id_data['artistDisplayName']}_{id_data['title']}.jpg")
-            urllib.request.urlretrieve(id_data['primaryImage'],
+            picurl = requote_uri(id_data['primaryImage'])
+            print("picture URL:"+picurl)
+            urllib.request.urlretrieve(picurl,
                                        os.path.join(out_dir, filename))
         except ConnectionError:
             print(ConnectionError.strerror)
